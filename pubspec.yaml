@@ -1,0 +1,36 @@
+name: notepad_app
+description: A new Flutter project.
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.15.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  firebase_auth: 3.3.8
+  google_sign_in: 5.1.0
+  font_awesome_flutter: 10.1.0
+
+  get_it: 7.2.0
+  mobx: 2.0.5
+  flutter_mobx: 2.0.2
+
+  mobx_codegen: 2.0.4
+  build_runner: 2.1.5
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/full-bloom.png

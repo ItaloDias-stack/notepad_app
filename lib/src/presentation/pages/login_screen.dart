@@ -5,7 +5,9 @@ import 'package:get_it/get_it.dart';
 import 'package:notepad_app/src/presentation/components/custom_buttom.dart';
 import 'package:notepad_app/src/presentation/components/custom_icon_buttom.dart';
 import 'package:notepad_app/src/presentation/components/custom_text_field.dart';
+import 'package:notepad_app/src/presentation/pages/register_screen.dart';
 import 'package:notepad_app/src/stores/google_sign_in_store.dart';
+import 'package:notepad_app/src/stores/register_store.dart';
 import 'package:notepad_app/src/utils/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,7 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
-  late GoogleSignInStore store = GetIt.instance.get<GoogleSignInStore>();
+  late GoogleSignInStore googleSignInStore =
+      GetIt.instance.get<GoogleSignInStore>();
+  late RegisterStore registerStore = GetIt.instance.get<RegisterStore>();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
           return Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: store.isLoading
+            child: googleSignInStore.isLoading
                 ? Center(
                     child: CircularProgressIndicator.adaptive(
                       valueColor: AlwaysStoppedAnimation<Color>(
@@ -39,85 +45,112 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   )
-                : Column(
-                    children: [
-                      Expanded(
-                        child: ClipPath(
-                          clipper: MyClipper(),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("assets/full-bloom.png"),
-                                fit: BoxFit.cover,
+                : Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ClipPath(
+                            clipper: MyClipper(),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage("assets/full-bloom.png"),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0, bottom: 20),
-                              child: CustomTextField(
-                                labelText: "E-mail",
-                                isPassword: false,
-                                placeholder: "Digite seu e-mail",
-                                controller: emailController,
-                                icon: const Icon(Icons.person_outline),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0),
-                              child: CustomTextField(
-                                labelText: "Senha",
-                                placeholder: "Digite sua senha",
-                                isPassword: true,
-                                controller: passController,
-                                icon: const Icon(Icons.vpn_key_rounded),
-                              ),
-                            ),
-                            const SizedBox(height: 25),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0),
-                              child: CustomButtom(
-                                text: "Login",
-                                backgroundColor: CustomColors.primaryColor,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0),
-                              child: CustomIconButtom(
-                                icon: const Icon(
-                                  FontAwesomeIcons.google,
-                                  color: Colors.white,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, right: 15.0, bottom: 20),
+                                child: CustomTextField(
+                                  labelText: "E-mail",
+                                  isPassword: false,
+                                  placeholder: "Digite seu e-mail",
+                                  controller: emailController,
+                                  onChanged: registerStore.setEmail,
+                                  validator: (value) =>
+                                      value == null || value.isEmpty
+                                          ? "Campo obrigatório"
+                                          : null,
+                                  icon: const Icon(Icons.person_outline),
                                 ),
-                                text: "Login com google",
-                                backgroundColor: Colors.redAccent,
-                                onPressed: () async {
-                                  await store.googleLogin(context);
-                                },
                               ),
-                            ),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0),
-                              child: CustomButtom(
-                                text: "Não possui uma conta?",
-                                backgroundColor: Colors.white,
-                                textColor: CustomColors.primaryColor,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, right: 15.0),
+                                child: CustomTextField(
+                                  labelText: "Senha",
+                                  isPassword: true,
+                                  placeholder: "Digite sua senha",
+                                  controller: passController,
+                                  icon: const Icon(Icons.vpn_key),
+                                  onChanged: registerStore.setPassword,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Campo obrigatório";
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                              const SizedBox(height: 25),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, right: 15.0),
+                                child: CustomButtom(
+                                  text: "Login",
+                                  backgroundColor: CustomColors.primaryColor,
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      await googleSignInStore
+                                          .signInWithEmailAndPassword(
+                                              context, registerStore.user);
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, right: 15.0),
+                                child: CustomIconButtom(
+                                  icon: const Icon(
+                                    FontAwesomeIcons.google,
+                                    color: Colors.white,
+                                  ),
+                                  text: "Login com google",
+                                  backgroundColor: Colors.redAccent,
+                                  onPressed: () async {
+                                    await googleSignInStore
+                                        .googleLogin(context);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, right: 15.0),
+                                child: CustomButtom(
+                                  onPressed: () => Navigator.pushNamed(
+                                    context,
+                                    RegisterScreen.routeName,
+                                  ),
+                                  text: "Não possui uma conta?",
+                                  backgroundColor: Colors.white,
+                                  textColor: CustomColors.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
           );
         }),

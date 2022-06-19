@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notepad_app/src/presentation/pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:notepad_app/src/utils/get_it_setup.dart';
+import 'package:notepad_app/src/utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      routes: routes,
       home: const LoginScreen(),
     );
   }

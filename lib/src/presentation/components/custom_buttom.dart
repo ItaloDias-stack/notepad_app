@@ -4,7 +4,7 @@ class CustomButtom extends StatelessWidget {
   final Color backgroundColor;
   final String text;
   final Color textColor;
-  final Function? onPressed;
+  final Function()? onPressed;
 
   CustomButtom(
       {required this.backgroundColor,
@@ -34,7 +34,7 @@ class CustomButtom extends StatelessWidget {
                 text,
                 style: TextStyle(color: textColor, fontSize: 18),
               ),
-              onPressed: () => onPressed!(),
+              onPressed: onPressed,
             ),
           ),
         ],

@@ -112,8 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await googleSignInStore
                                           .signInWithEmailAndPassword(
                                               context, registerStore.user);
-                                      Navigator.pushNamed(
-                                          context, NotepadHomeScreen.routeName);
+                                      if (googleSignInStore.user != null) {
+                                        Navigator.pushNamed(context,
+                                            NotepadHomeScreen.routeName);
+                                      }
                                     }
                                   },
                                 ),

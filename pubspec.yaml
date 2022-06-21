@@ -14,9 +14,11 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   firebase_auth: 3.3.8
+  firebase_database: 9.0.7
+  firebase_core: 1.12.0
   google_sign_in: 5.1.0
   font_awesome_flutter: 10.1.0
-
+  uuid: 3.0.5
   get_it: 7.2.0
   mobx: 2.0.5
   flutter_mobx: 2.0.2

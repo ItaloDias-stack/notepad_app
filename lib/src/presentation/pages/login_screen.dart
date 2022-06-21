@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:notepad_app/src/presentation/components/custom_buttom.dart';
 import 'package:notepad_app/src/presentation/components/custom_icon_buttom.dart';
 import 'package:notepad_app/src/presentation/components/custom_text_field.dart';
+import 'package:notepad_app/src/presentation/pages/notepad_home_screen.dart';
 import 'package:notepad_app/src/presentation/pages/register_screen.dart';
 import 'package:notepad_app/src/stores/google_sign_in_store.dart';
 import 'package:notepad_app/src/stores/register_store.dart';
@@ -111,6 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await googleSignInStore
                                           .signInWithEmailAndPassword(
                                               context, registerStore.user);
+                                      Navigator.pushNamed(
+                                          context, NotepadHomeScreen.routeName);
                                     }
                                   },
                                 ),
@@ -129,6 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () async {
                                     await googleSignInStore
                                         .googleLogin(context);
+                                    Navigator.pushNamed(
+                                        context, NotepadHomeScreen.routeName);
                                   },
                                 ),
                               ),
